@@ -1,9 +1,7 @@
-package com.errday.codingtest.coprime;
+package com.errday.codingtest.unionsearch;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.*;
 
 public class Cycle {
 
