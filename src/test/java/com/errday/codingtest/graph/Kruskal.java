@@ -1,4 +1,4 @@
-package com.errday.codingtest.greedy;
+package com.errday.codingtest.graph;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
