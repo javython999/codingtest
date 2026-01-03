@@ -1,4 +1,4 @@
-package com.errday.floydwarshall;
+package com.errday.codingtest.shortpath.floydwarshall;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

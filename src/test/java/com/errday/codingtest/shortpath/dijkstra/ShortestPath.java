@@ -1,4 +1,4 @@
-package com.errday.codingtest.dijkstra;
+package com.errday.codingtest.shortpath.dijkstra;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

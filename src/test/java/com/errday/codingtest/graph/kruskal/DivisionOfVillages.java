@@ -1,4 +1,4 @@
-package com.errday.codingtest.graph;
+package com.errday.codingtest.graph.kruskal;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
