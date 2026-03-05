@@ -1,4 +1,4 @@
-package com.errday.codingtest.unionsearch;
+package com.errday.codingtest.unionfind;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
