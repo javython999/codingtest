@@ -1,8 +1,8 @@
-package com.errday.codingtest.shortpath.dijkstra;
+package com.errday.codingtest.shortpath.floydwarshall;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -71,37 +71,34 @@ public class Taxi {
     private int solution(int n, int s, int a, int b, int[][] fares) {
         int[][] graph = initGraph(n, fares);
 
-        int[] distFromStart = dijkstra(graph, s);
-        int[] distFromA = dijkstra(graph, a);
-        int[] distFromB = dijkstra(graph, b);
+        floydWarshall(n, graph);
 
-        int answer = distFromStart[a] + distFromStart[b];
+        int answer = INF;
 
-        for (int i = 1; i < n + 1; i++) {
+        for (int i = 1; i <= n; i++) {
 
-            if (distFromStart[i] == INF || distFromA[i] == INF || distFromB[i] == INF) {
+            if (graph[s][i] == INF || graph[i][a] == INF || graph[i][b] == INF) {
                 continue;
             }
 
-            int newCost = distFromStart[i] + distFromA[i] + distFromB[i];
-            answer = Math.min(answer, newCost);
+            answer = Math.min(answer, graph[s][i] + graph[i][a] + graph[i][b]);
         }
 
         return answer;
     }
 
     private int[][] initGraph(int nodeCount, int[][] fares) {
-        int[][] graph = new int[nodeCount+1][nodeCount+1];
-
-        for (int i = 1; i < nodeCount + 1; i++) {
-            Arrays.fill(graph[i], INF);
-            graph[i][i] = 0;
+        int[][] graph = new int[nodeCount + 1][nodeCount + 1];
+        for (int[] row : graph) {
+            Arrays.fill(row, INF);
         }
 
         for (int[] fare : fares) {
             int a = fare[0];
             int b = fare[1];
             int cost = fare[2];
+            graph[a][a] = 0;
+            graph[b][b] = 0;
             graph[a][b] = cost;
             graph[b][a] = cost;
         }
@@ -109,42 +106,19 @@ public class Taxi {
         return graph;
     }
 
-    private int[] dijkstra(int[][] graph, int start) {
-        int nodeCount = graph.length;
-        int[] costs = new int[nodeCount];
-        Arrays.fill(costs, INF);
-        costs[start] = 0;
+    private void floydWarshall(int n, int[][] graph) {
+        for (int stopOver = 1; stopOver <= n; stopOver++) {
+            for (int start = 1; start <= n; start++) {
+                for (int end = 1; end <= n; end++) {
 
-        PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(v -> v[1]));
-        queue.offer(new int[] {start, 0});
+                    if (graph[start][stopOver] == INF || graph[stopOver][end] == INF) {
+                        continue;
+                    }
 
-        while (!queue.isEmpty()) {
-            int[] current = queue.poll();
-            int currentVertex = current[0];
-            int currentCost = current[1];
-
-            if (costs[currentVertex] < currentCost) {
-                continue;
-            }
-
-            int[] nexts = graph[currentVertex];
-
-            for (int next = 1; next < nexts.length; next++) {
-                int nextCost = nexts[next];
-
-                if (nextCost == INF) {
-                    continue;
-                }
-
-                int newCost = currentCost + nextCost;
-
-                if (newCost < costs[next]) {
-                    costs[next] = newCost;
-                    queue.offer(new int[] {next, newCost});
+                    graph[start][end] = Math.min(graph[start][end], graph[start][stopOver] + graph[stopOver][end]);
                 }
             }
         }
-
-        return costs;
     }
+
 }
