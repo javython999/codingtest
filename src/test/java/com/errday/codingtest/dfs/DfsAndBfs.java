@@ -20,6 +20,30 @@ public class DfsAndBfs {
         assertThat(solution(n, m, v, input)).isEqualTo(answer);
     }
 
+    @Test
+    void case2() {
+        int n = 5;
+        int m = 5;
+        int v = 3;
+        String[] input = {"5 4", "5 2", "1 2", "3 4", "3 1"};
+
+        String answer = "3 1 2 5 4\n3 1 4 2 5";
+
+        assertThat(solution(n, m, v, input)).isEqualTo(answer);
+    }
+
+    @Test
+    void case3() {
+        int n = 1000;
+        int m = 1;
+        int v = 1000;
+        String[] input = {"999 1000"};
+
+        String answer = "1000 999\n1000 999";
+
+        assertThat(solution(n, m, v, input)).isEqualTo(answer);
+    }
+
 
     private String solution(int n, int m, int v, String[] input) {
 
@@ -66,7 +90,7 @@ public class DfsAndBfs {
             sj.add(String.valueOf(current));
 
             List<Integer> nexts = graph.get(current);
-            for (int i = nexts.size() -1; i >= 0; i--) {
+            for (int i = nexts.size() - 1; i >= 0; i--) {
                 int next = nexts.get(i);
 
                 if (!visited[next]) {
