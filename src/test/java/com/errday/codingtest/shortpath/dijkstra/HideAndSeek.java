@@ -14,19 +14,20 @@ public class HideAndSeek {
         int n = 5;
         int k = 17;
         int answer = 2;
-        Assertions.assertThat(solution(n, k)).isEqualTo(answer);
+        Assertions.assertThat(dijkstra(n, k)).isEqualTo(answer);
+        Assertions.assertThat(bfs(n, k)).isEqualTo(answer);
     }
 
 
-    private int solution(int n, int k) {
+    private int dijkstra(int n, int k) {
         int boundary = 100_000 + 1;
         int inf = Integer.MAX_VALUE / 2;
         int[] distances = new int[boundary];
         Arrays.fill(distances, inf);
+        distances[n] = 0;
 
         PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(v -> v[1]));
         queue.offer(new int[] {n, 0});
-        distances[n] = 0;
 
         while (!queue.isEmpty()) {
 
@@ -65,5 +66,42 @@ public class HideAndSeek {
         }
 
         return distances[k];
+    }
+
+    private int bfs(int n, int k) {
+        int boundary = 100_000 + 1;
+        int inf = Integer.MAX_VALUE / 2;
+
+        int[] distances = new int[boundary];
+        Arrays.fill(distances, inf);
+        distances[n] = 0;
+
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        queue.offer(n);
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+
+            if (current == k) {
+                return distances[current];
+            }
+
+            if (current * 2 < boundary && distances[current] < distances[current * 2]) {
+                distances[current * 2] = distances[current];
+                queue.addFirst(current * 2);
+            }
+
+            if (current - 1 >= 0 && distances[current] + 1 < distances[current - 1]) {
+                distances[current - 1] = distances[current] + 1;
+                queue.addLast(current - 1);
+            }
+
+            if (current + 1 < boundary && distances[current] + 1 < distances[current + 1]) {
+                distances[current + 1] = distances[current] + 1;
+                queue.addLast(current + 1);
+            }
+        }
+
+        return -1;
     }
 }
