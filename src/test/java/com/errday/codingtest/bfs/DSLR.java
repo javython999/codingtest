@@ -3,7 +3,6 @@ package com.errday.codingtest.bfs;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Queue;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,109 +30,84 @@ public class DSLR {
         assertThat(solution(input)).isEqualTo(answer);
     }
 
-    private String EMPTY = "empty";
     private String solution(String input) {
         String[] split = input.split(" ");
         int start = Integer.parseInt(split[0]);
         int end = Integer.parseInt(split[1]);
 
-        String[] memory = new String[10000];
+        int[] parents = new int[10_000];
+        char[] commands = new char[10_000];
+        boolean[] visited = new boolean[10_000];
 
-        Arrays.fill(memory, EMPTY);
-
-        Queue<Node> queue = new ArrayDeque<>();
-        queue.offer(new Node(start, ""));
-        memory[start] = "";
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.add(start);
+        visited[start] = true;
 
         while (!queue.isEmpty()) {
-            Node current = queue.poll();
+            int current = queue.poll();
 
-            if (current.value == end) {
-                return current.command;
+            if (current == end) {
+                break;
             }
 
-            processD(current, memory, queue);
-            processS(current, memory, queue);
-            processL(current, memory, queue);
-            processR(current, memory, queue);
+            processD(current, visited, parents, commands, queue);
+            processS(current, visited, parents, commands, queue);
+            processL(current, visited, parents, commands, queue);
+            processR(current, visited, parents, commands, queue);
+
         }
 
+        return processResult(start, end, parents, commands);
 
-        return "ERROR";
     }
 
-    private void processD(Node node, String[] memory, Queue<Node> queue) {
-        int value = node.value * 2;
-        if (10_000 < value) {
-            value = value % 10_000;
-        }
-
-        if (EMPTY.equals(memory[value])) {
-            String command = node.command + "D";
-            memory[value] = command;
-            queue.offer(new Node(value, command));
-        }
-    }
-
-    private void processS(Node node, String[] memory, Queue<Node> queue) {
-        int value = node.value - 1;
-        if (value < 0) {
-            value = 9999;
-        }
-
-        if (EMPTY.equals(memory[value])) {
-            String command = node.command + "S";
-            memory[value] = command;
-            queue.offer(new Node(value, command));
+    private void processD(int register, boolean[] visited, int[] parents, char[] commands, Queue<Integer> queue) {
+        int value = (register * 2) % 10_000;
+        if (!visited[value]) {
+            visited[value] = true;
+            parents[value] = register;
+            commands[value] = 'D';
+            queue.offer(value);
         }
     }
 
-    private void processL(Node node, String[] memory, Queue<Node> queue) {
-        String strNumber = node.strValue;
-        String first = strNumber.substring(0, 1);
-        String second = strNumber.substring(1);
-
-        int value = Integer.parseInt(second+first);
-
-        if (EMPTY.equals(memory[value])) {
-            String command = node.command + "L";
-            memory[value] = command;
-            queue.offer(new Node(value, command));
+    private void processS(int register, boolean[] visited, int[] parents, char[] commands, Queue<Integer> queue) {
+        int value = register == 0 ? 9999 : register - 1;
+        if (!visited[value]) {
+            visited[value] = true;
+            parents[value] = register;
+            commands[value] = 'S';
+            queue.add(value);
         }
     }
 
-    private void processR(Node node, String[] memory, Queue<Node> queue) {
-        String strNumber = node.strValue;
-        String first = strNumber.substring(0, strNumber.length() - 2);
-        String second = strNumber.substring(strNumber.length() - 1);
-
-        int value = Integer.parseInt(second + first);
-
-        if (EMPTY.equals(memory[value])) {
-            String command = node.command + "R";
-            memory[value] = command;
-            queue.offer(new Node(value, command));
+    private void processL(int register, boolean[] visited, int[] parents, char[] commands, Queue<Integer> queue) {
+        int value = (register % 1000) * 10 + (register / 1000);
+        if (!visited[value]) {
+            visited[value] = true;
+            parents[value] = register;
+            commands[value] = 'L';
+            queue.offer(value);
         }
     }
 
-    private class Node {
-        int value;
-        String strValue;
-        String command;
-
-        public Node(int value, String command) {
-            this.value = value;
-            this.strValue = leftPadding(value);
-            this.command = command;
+    private void processR(int register, boolean[] visited, int[] parents, char[] commands, Queue<Integer> queue) {
+        int value = (register % 10) * 1000 + (register / 10);
+        if (!visited[value]) {
+            visited[value] = true;
+            parents[value] = register;
+            commands[value] = 'R';
+            queue.add(value);
         }
+    }
 
-        private static String leftPadding(int value) {
-            int loopCount = 4 - String.valueOf(value).length();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < loopCount; i++) {
-                sb.append("0");
-            }
-            return sb.toString() + value;
+    private String processResult(int start, int end, int[] parents, char[] commands) {
+        int current = end;
+        StringBuilder sb = new StringBuilder();
+        while (current != start) {
+            sb.append(commands[current]);
+            current = parents[current];
         }
+        return sb.reverse().toString();
     }
 }
