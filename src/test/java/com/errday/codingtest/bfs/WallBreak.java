@@ -46,13 +46,11 @@ public class WallBreak {
     };
     private int solution(int n, int m, int[][] map) {
 
-        boolean[][][] status = new boolean[n][m][2];
         int[][][] distance = new int[n][m][2];
+        distance[0][0][0] = 1;
 
         Queue<int[]> queue = new ArrayDeque<>();
         queue.offer(new int[] {0, 0, 0});
-        status[0][0][0] = true;
-        distance[0][0][0] = 1;
 
         while (!queue.isEmpty()) {
             int[] current = queue.poll();
@@ -76,15 +74,13 @@ public class WallBreak {
                     continue;
                 }
 
-                if (map[nextRow][nextCol] == 0 && !status[nextRow][nextCol][broken]) {
-                    status[nextRow][nextCol][broken] = true;
+                if (map[nextRow][nextCol] == 0 && distance[nextRow][nextCol][broken] == 0) {
                     queue.offer(new int[] {nextRow, nextCol, broken});
                     distance[nextRow][nextCol][broken] = distance[row][col][broken] + 1;
 
                 }
 
-                if (map[nextRow][nextCol] == 1 && broken == 0 && !status[nextRow][nextCol][1]) {
-                    status[nextRow][nextCol][1] = true;
+                if (map[nextRow][nextCol] == 1 && broken == 0 && distance[nextRow][nextCol][1] == 0) {
                     queue.offer(new int[] {nextRow, nextCol, 1});
                     distance[nextRow][nextCol][1] = distance[row][col][broken] + 1;
                 }
