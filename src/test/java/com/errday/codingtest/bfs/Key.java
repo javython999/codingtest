@@ -25,6 +25,42 @@ public class Key {
         assertThat(solution(h, w, building, keys)).isEqualTo(answer);
     }
 
+    @Test
+    void case2() {
+        int h = 5;
+        int w = 11;
+        char[][] building = {
+                {'*', '.', '*', '*', '*', '*', '*', '*', '*', '*', '*'},
+                {'*', '.', '.', '.', '*', '.', '.', '.', '*', 'x', '*'},
+                {'*', 'X', '*', '.', '*', '.', '*', '.', '*', '.', '*'},
+                {'*', '$', '*', '.', '.', '.', '*', '.', '.', '.', '*'},
+                {'*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*'}
+        };
+        String keys = "";
+
+        int answer = 1;
+        assertThat(solution(h, w, building, keys)).isEqualTo(answer);
+    }
+
+    @Test
+    void case3() {
+        int h = 7;
+        int w = 7;
+        char[][] building = {
+                {'*', 'A', 'B', 'C', 'D', 'E', '*'},
+                {'X', '.', '.', '.', '.', '.', 'F'},
+                {'W', '.', '$', '$', '$', '.', 'G'},
+                {'V', '.', '$', '$', '$', '.', 'H'},
+                {'U', '.', '$', '$', '$', '.', 'J'},
+                {'T', '.', '.', '.', '.', '.', 'K'},
+                {'*', 'S', 'Q', 'P', 'M', 'L', '*'}
+        };
+        String keys = "irony";
+
+        int answer = 0;
+        assertThat(solution(h, w, building, keys)).isEqualTo(answer);
+    }
+
     private char EMPTY = '.';
     private char WALL = '*';
     private char DOCUMENT = '$';
