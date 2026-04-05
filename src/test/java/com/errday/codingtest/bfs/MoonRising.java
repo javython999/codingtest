@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Queue;
 
 public class MoonRising {
@@ -17,6 +16,102 @@ public class MoonRising {
                 {'f', '0', '.', 'F', '.', '.', '1'}
         };
         int answer = 7;
+        Assertions.assertThat(solution(n, m, map)).isEqualTo(answer);
+    }
+
+    @Test
+    void case2() {
+        int n = 5;
+        int m = 5;
+        char[][] map = {
+                {'.', '.', '.', '.', '1'},
+                {'#', '1', '#', '#', '#'},
+                {'.', '1', '.', '#', '0'},
+                {'.', '.', '.', '.', 'A'},
+                {'.', '1', '.', '#', '.'}
+        };
+        int answer = -1;
+        Assertions.assertThat(solution(n, m, map)).isEqualTo(answer);
+    }
+
+    @Test
+    void case3() {
+        int n = 7;
+        int m = 8;
+        char[][] map = {
+                {'a', '#', 'c', '#', 'e', 'F', '.', '1'},
+                {'.', '#', '.', '#', '.', '#', '.', '.'},
+                {'.', '#', 'B', '#', 'D', '#', '#', '#'},
+                {'0', '.', '.', '.', '.', 'F', '.', '1'},
+                {'C', '#', 'E', '#', 'A', '#', '#', '#'},
+                {'.', '#', '.', '#', '.', '#', '.', '.'},
+                {'d', '#', 'f', '#', 'b', 'F', '.', '1'}
+        };
+        int answer = 55;
+        Assertions.assertThat(solution(n, m, map)).isEqualTo(answer);
+    }
+
+    @Test
+    void case4() {
+        int n = 3;
+        int m = 4;
+        char[][] map = {
+                {'1', '.', '.', '0'},
+                {'#', '#', '#', '.'},
+                {'1', '.', '.', '.'}
+        };
+        int answer = 3;
+        Assertions.assertThat(solution(n, m, map)).isEqualTo(answer);
+    }
+
+    @Test
+    void case5() {
+        int n = 3;
+        int m = 5;
+        char[][] map = {
+                {'.', '.', '0', '.', '.'},
+                {'.', '#', '#', '#', '.'},
+                {'.', '.', '1', '.', 'A'}
+        };
+        int answer = 6;
+        Assertions.assertThat(solution(n, m, map)).isEqualTo(answer);
+    }
+
+    @Test
+    void case6() {
+        int n = 4;
+        int m = 5;
+        char[][] map = {
+                {'0', '.', '.', '.', '.'},
+                {'.', '#', 'B', '#', 'A'},
+                {'.', '#', '.', '#', '.'},
+                {'b', '#', 'a', '#', '1'}
+        };
+        int answer = 19;
+        Assertions.assertThat(solution(n, m, map)).isEqualTo(answer);
+    }
+
+    @Test
+    void case7() {
+        int n = 1;
+        int m = 11;
+        char[][] map = {
+                {'c', '.', '0', '.', 'C', '.', 'C', '.', 'C', '.', '1'}
+        };
+        int answer = 12;
+        Assertions.assertThat(solution(n, m, map)).isEqualTo(answer);
+    }
+
+    @Test
+    void case8() {
+        int n = 3;
+        int m = 6;
+        char[][] map = {
+                {'#', '#', '#', '.', '.', '.'},
+                {'#', '0', 'A', '.', '1', 'a'},
+                {'#', '#', '#', '.', '.', '.'}
+        };
+        int answer = -1;
         Assertions.assertThat(solution(n, m, map)).isEqualTo(answer);
     }
 
@@ -76,43 +171,32 @@ public class MoonRising {
                     return moveCount + 1;
                 }
 
-                if (nextType == EMPTY || nextType == START) {
-                    if (!visited[nextRow][nextCol][keyState]) {
-                        visited[nextRow][nextCol][keyState] = true;
-                        queue.offer(new int[]{nextRow, nextCol, keyState, moveCount + 1});
-                    }
-                    continue;
-                }
+                int newKeyState = keyState;
 
                 // 열쇠
-                if (Character.isLowerCase(nextType)) {
-                    int newKeyState = keyState | (1 << getKeyIndex(nextType));
-                    if (!visited[nextRow][nextCol][newKeyState]) {
-                        visited[nextRow][nextCol][newKeyState] = true;
-                        queue.offer(new int[]{nextRow, nextCol, newKeyState, moveCount + 1});
-                    }
-                    continue;
+                if ('a' <= nextType && nextType <= 'z') {
+                    newKeyState = keyState | (1 << nextType - 'a');
                 }
 
                 // 문
-                if (Character.isUpperCase(nextType)) {
-                    int doorIndex = getKeyIndex(Character.toLowerCase(nextType));
+                if ('A' <= nextType && nextType <= 'Z') {
+                    int keyIndex = nextType - 'A';
 
-                    // 열쇠 있음
-                    if ((keyState & (1 << doorIndex)) != 0) {
-                        if (!visited[nextRow][nextCol][keyState]) {
-                            visited[nextRow][nextCol][keyState] = true;
-                            queue.offer(new int[]{nextRow, nextCol, keyState, moveCount + 1});
-                        }
+                    if ((newKeyState & (1 << keyIndex)) == 0) {
+                        continue;
                     }
                 }
+
+                if (visited[nextRow][nextCol][newKeyState]) {
+                    continue;
+                }
+
+                visited[nextRow][nextCol][newKeyState] = true;
+                queue.offer(new int[]{nextRow, nextCol, newKeyState, moveCount + 1});
             }
         }
 
         return -1;
     }
 
-    private int getKeyIndex(char key) {
-        return key - 'a';
-    }
 }
