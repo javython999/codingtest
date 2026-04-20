@@ -12,10 +12,11 @@ public class Knapsack {
         int k = 7;
         int[][] items = {{6, 13}, {4, 8}, {3, 6}, {5, 12}};
         int answer = 14;
-        assertThat(solution(n, k, items)).isEqualTo(answer);
+        assertThat(solution_1d(n, k, items)).isEqualTo(answer);
+        assertThat(solution_2d(n, k, items)).isEqualTo(answer);
     }
 
-    private int solution(int n, int k, int[][] items) {
+    private int solution_2d(int n, int k, int[][] items) {
 
         int[][] memo = new int[n + 1][k + 1];
 
@@ -36,5 +37,22 @@ public class Knapsack {
         }
 
         return memo[n][k];
+    }
+
+    private int solution_1d(int n, int k, int[][] items) {
+
+        int[] memo = new int[k + 1];
+
+        for (int i = 0; i < n; i++) {
+
+            int[] item = items[i];
+
+            for (int weight = k; weight >= item[0]; weight--) {
+                memo[weight] = Math.max(memo[weight], memo[weight - item[0]] + item[1]);
+            }
+        }
+
+
+        return memo[k];
     }
 }
