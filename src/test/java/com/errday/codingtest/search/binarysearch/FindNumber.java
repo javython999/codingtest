@@ -56,7 +56,7 @@ public class FindNumber {
                 }
             }
         }
-        // 이거 한글폰트 적용 안되는대 떄
+
         return exists;
     }
 }
