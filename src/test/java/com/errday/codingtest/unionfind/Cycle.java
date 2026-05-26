@@ -40,7 +40,7 @@ public class Cycle {
 
     private int findParent(int[] parent, int x) {
         if (parent[x] != x) {
-            return findParent(parent, parent[x]);
+            return parent[x] = findParent(parent, parent[x]);
         }
 
         return parent[x];
