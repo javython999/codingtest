@@ -50,9 +50,6 @@ public class Telegram {
         Arrays.fill(cost, INF);
         cost[start] = 0;
 
-        boolean[] visited = new boolean[length];
-
-
         PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(data -> data[1]));
         queue.offer(new int[] {start, 0});
 
@@ -61,11 +58,9 @@ public class Telegram {
             int currentNodeNumber = currentNodeInfo[0];
             int currentNodeCost = currentNodeInfo[1];
 
-            if (visited[currentNodeNumber]) {
+            if (cost[currentNodeNumber] < currentNodeCost) {
                 continue;
             }
-
-            visited[currentNodeNumber] = true;
 
             for (int next = 1; next < length; next++) {
 
