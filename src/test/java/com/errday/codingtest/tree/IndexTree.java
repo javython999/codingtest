@@ -32,7 +32,7 @@ public class IndexTree {
 
         // 트리 길이 구하기
         int k = 0;
-        while (Math.pow(2, k) < length) {
+        while ((1 << k) < length) {
             k += 1;
         }
 
