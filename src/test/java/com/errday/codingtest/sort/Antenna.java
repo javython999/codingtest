@@ -8,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Antenna {
 
-
     @Test
     void case1() {
         int[] input = {5, 1, 7, 9};
@@ -19,7 +18,7 @@ public class Antenna {
     @Test
     void case2() {
         int[] input = {1, 10, 32, 22, 6, 3, 8};
-        int answer = 6;
+        int answer = 8;
         assertThat(answer).isEqualTo(solution(input));
     }
 
